@@ -1,0 +1,56 @@
+﻿@page "/basvur"
+
+@using MernisDogrulamaApp.Data
+@inject MernisService MernisService
+
+<h1>Kayıt Formu</h1>
+
+@if (isPost)
+{
+    if (dogrulamaSonucu)
+    {
+        <div class="alert alert-success">Tc Kimlik Doğrulama Başarılıdır.</div>
+    }
+    else
+    {
+        <div class="alert alert-danger">Tc Kimlik Doğrulanamadı.</div>
+    }
+}
+
+
+<EditForm Model=@kullanici OnSubmit=@Dogrula>
+
+    <div class="form-group">
+        <label for="ad">Ad</label>
+        <input type="text" class="form-control" @bind="@kullanici.Ad" id="ad">
+    </div>
+    <div class="form-group">
+        <label for="soyad">Soyad</label>
+        <input type="text" class="form-control" @bind="@kullanici.Soyad" id="soyad">
+    </div>
+    <div class="form-group">
+        <label for="tcKimlikNo">TC Kimlik No</label>
+        <input type="text" class="form-control" @bind="@kullanici.TcKimlikNo" id="tcKimlikNo">
+    </div>
+    <div class="form-group">
+        <label for="dogumYili">Doğum Tarihi</label>
+        <input type="date" class="form-control" @bind="@kullanici.DogumTarihi"   id="dogumYili">
+    </div>
+
+
+    <input type="submit" value="Doğrula" class="btn btn-primary" />
+</EditForm>
+
+
+
+
+@code {
+
+    Kullanici kullanici = new Kullanici();
+    bool dogrulamaSonucu, isPost;
+    protected void Dogrula()
+    {
+        isPost = true;
+        dogrulamaSonucu = MernisService.TcKimlikDogrula(kullanici).GetAwaiter().GetResult();
+    }
+}
